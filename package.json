@@ -1,0 +1,12 @@
+{
+	"name": "gameoflife",
+	"version": "0.0.1",
+	"devDependencies": {
+		"mocha": "*",
+		"chai": "*"
+	},
+
+	"scripts": {
+		"test": "mocha"
+	}
+}

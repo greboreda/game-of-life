@@ -24,16 +24,27 @@ class GameOfLife {
 			if(current.equals(location)) {
 				return true;
 			}
-			return false;
 		}
+		return false;
 	}
 
 	iterate() {
 		let bornCells = [];
 		for(let i=0 ; i<this.emptyLocations.length ; i++) {
-
+			let current = this.emptyLocations[i];
+			let neighboors = this.world.convertLocations(current.neighboors);
+			let livingNeighbors = neighboors.filter(function(location) {
+				return this.isCellAlive(location);
+			}, this);
+			if(livingNeighbors.length === 3) {
+				bornCells.push(current);
+			}
 		}
-
+		return new GameOfLife({
+			rows: this.world.rows,
+			cols: this.world.cols,
+			locationsWithLivingCell: bornCells
+		});
 	}
 
 	repr() {
@@ -121,6 +132,10 @@ class Location {
 			let newY = this.y + factor.dy;
 			return new Location(newX, newY);
 		}, this);
+	}
+
+	toString() {
+		return '{ x: ' + this.x + ', y: ' + this.y + ' }';
 	}
 }
 

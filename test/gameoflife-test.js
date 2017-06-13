@@ -157,7 +157,7 @@ describe('Game of Life', function() {
 		}).should.to.throw(Error, 'Invalid configuration: many cells have invalid locations');
 	});
 
-	it('foo', function() {
+	it('should detect empty locations', function() {
 		let gol = new GameOfLife({
 			rows: 2,
 			cols: 1,
@@ -166,4 +166,179 @@ describe('Game of Life', function() {
 		gol.emptyLocations.should.be.an('array').that.have.lengthOf(1);
 		gol.emptyLocations.should.deep.contain(new Location(1,0));
 	});
+
+	describe('born cells', function() {
+
+		it('should born cell when have 3 alive neighboors', function() {
+
+			let gol = new GameOfLife({
+				rows: 4,
+				cols: 4,
+				locationsWithLivingCell: [new Location(0,0), new Location(0,1), new Location(1,0)]
+			});
+			let aliveByReproduction = new Location(1,1);
+
+			let iteration = gol.iterate();
+
+			gol.isCellAlive(aliveByReproduction).should.be.false;
+			iteration.isCellAlive(aliveByReproduction).should.be.true;
+
+		});
+
+		it('should not born cell when have 2 alive neighboors', function() {
+
+			let gol = new GameOfLife({
+				rows: 4,
+				cols: 4,
+				locationsWithLivingCell: [new Location(0,0), new Location(0,1)]
+			});
+			let deadByIsolation = new Location(1,1);
+
+			let iteration = gol.iterate();
+
+			gol.isCellAlive(deadByIsolation).should.be.false;
+			iteration.isCellAlive(deadByIsolation).should.be.false;
+
+		});
+
+		it('should not born cell when have 1 alive neighboors', function() {
+
+			let gol = new GameOfLife({
+				rows: 4,
+				cols: 4,
+				locationsWithLivingCell: [new Location(0,0)]
+			});
+			let deadByIsolation = new Location(1,1);
+
+			let iteration = gol.iterate();
+
+			gol.isCellAlive(deadByIsolation).should.be.false;
+			iteration.isCellAlive(deadByIsolation).should.be.false;
+
+		});
+
+		it('should not born cell when have 0 alive neighboors', function() {
+
+			let gol = new GameOfLife({
+				rows: 4,
+				cols: 4,
+				locationsWithLivingCell: []
+			});
+			let deadByIsolation = new Location(1,1);
+
+			let iteration = gol.iterate();
+
+			gol.isCellAlive(deadByIsolation).should.be.false;
+			iteration.isCellAlive(deadByIsolation).should.be.false;
+
+		});
+
+		it('should not born cell when have 4 alive neighboors', function() {
+
+			let gol = new GameOfLife({
+				rows: 4,
+				cols: 4,
+				locationsWithLivingCell: [	new Location(0,0),
+											new Location(0,1),
+											new Location(1,0),
+											new Location(1,2) ]
+			});
+			let deadByIsolation = new Location(1,1);
+
+			let iteration = gol.iterate();
+
+			gol.isCellAlive(deadByIsolation).should.be.false;
+			iteration.isCellAlive(deadByIsolation).should.be.false;
+
+		});
+
+		it('should not born cell when have 5 alive neighboors', function() {
+
+			let gol = new GameOfLife({
+				rows: 4,
+				cols: 4,
+				locationsWithLivingCell: [	new Location(0,0), 
+											new Location(0,1),
+											new Location(1,0),
+											new Location(0,2),
+											new Location(1,2)]
+			});
+			let deadByIsolation = new Location(1,1);
+
+			let iteration = gol.iterate();
+
+			gol.isCellAlive(deadByIsolation).should.be.false;
+			iteration.isCellAlive(deadByIsolation).should.be.false;
+
+		});
+
+		it('should not born cell when have 6 alive neighboors', function() {
+
+			let gol = new GameOfLife({
+				rows: 4,
+				cols: 4,
+				locationsWithLivingCell: [	new Location(0,0), 
+											new Location(0,1),
+											new Location(1,0),
+											new Location(0,2),
+											new Location(1,2),
+											new Location(2,0)]
+			});
+			let deadByIsolation = new Location(1,1);
+
+			let iteration = gol.iterate();
+
+			gol.isCellAlive(deadByIsolation).should.be.false;
+			iteration.isCellAlive(deadByIsolation).should.be.false;
+
+		});
+
+		it('should not born cell when have 7 alive neighboors', function() {
+
+			let gol = new GameOfLife({
+				rows: 4,
+				cols: 4,
+				locationsWithLivingCell: [	new Location(0,0), 
+											new Location(0,1),
+											new Location(1,0),
+											new Location(0,2),
+											new Location(1,2),
+											new Location(2,0),
+											new Location(2,1)]
+			});
+			let deadByIsolation = new Location(1,1);
+
+			let iteration = gol.iterate();
+
+			gol.isCellAlive(deadByIsolation).should.be.false;
+			iteration.isCellAlive(deadByIsolation).should.be.false;
+
+		});
+
+		it('should not born cell when have 8 alive neighboors', function() {
+
+			let gol = new GameOfLife({
+				rows: 4,
+				cols: 4,
+				locationsWithLivingCell: [	new Location(0,0), 
+											new Location(0,1),
+											new Location(1,0),
+											new Location(0,2),
+											new Location(1,2),
+											new Location(2,0),
+											new Location(2,1),
+											new Location(2,2)]
+			});
+			let deadByIsolation = new Location(1,1);
+
+			let iteration = gol.iterate();
+
+			gol.isCellAlive(deadByIsolation).should.be.false;
+			iteration.isCellAlive(deadByIsolation).should.be.false;
+
+		});
+
+
+	});
+
 })

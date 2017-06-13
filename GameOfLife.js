@@ -84,14 +84,12 @@ class Location {
 			{dx:-1, dy: 1},
 			{dx: 1, dy:-1}
 		]
-		let neighboors = [];
-		for(let i=0 ; i<factors.length ; i++) {
-			let factor = factors[i];
+
+		return factors.map(function(factor) {
 			let newX = this.x + factor.dx;
 			let newY = this.y + factor.dy;
-			neighboors.push(new Location(newX, newY));
-		}
-		return neighboors;
+			return new Location(newX, newY);
+		}, this);
 	}
 }
 

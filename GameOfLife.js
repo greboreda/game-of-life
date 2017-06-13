@@ -5,7 +5,10 @@ class GameOfLife {
 
 		this.world = new World(config.rows, config.cols);
 		this.livings = config.locationsWithLivingCell.filter(function(location, index, self) {
-			return self.findIndex((l) => {return l.x === location.x && l.y === location.y; }) === index;
+			let foundIndex = self.findIndex(function(l) {
+				return l.x === location.x && l.y === location.y; 
+			}); 
+			return foundIndex === index;
 		});
 		this.livings.forEach(function(location, index) {
 			if(!this.world.containsLocation(location)) {

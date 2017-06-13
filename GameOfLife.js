@@ -7,7 +7,7 @@ class GameOfLife {
 		this.livings = config.locationsWithLivingCell.filter(function(location, index, self) {
 			let foundIndex = self.findIndex(function(l) {
 				return l.x === location.x && l.y === location.y; 
-			}); 
+			});
 			return foundIndex === index;
 		});
 		this.livings.forEach(function(location, index) {
@@ -27,6 +27,24 @@ class GameOfLife {
 
 	get numberLivings() {
 		return this.livings.length;
+	}
+
+	get emptyLocations() {
+		let emptyLocations = [];
+		let allLocations = this.world.allLocations;
+		for(let i=0 ; i<allLocations.length ; i++) {
+			let found = false;
+			for(let j=0 ; j<this.livings.length; j++) {
+				if(this.livings[j].equals(allLocations[i])) {
+					found = true;
+					break;
+				}
+			}
+			if(!found) {
+				emptyLocations.push(allLocations[i]);
+			}
+		}
+		return emptyLocations;
 	}
 }
 
@@ -59,6 +77,16 @@ class World {
 
 	get area() {
 		return this.rows * this.cols;
+	}
+
+	get allLocations() {
+		let locations = [];
+		for(let i=0 ; i<this.rows ; i++) {
+			for(let j=0 ; j<this.cols ; j++) {
+				locations.push(new Location(i,j));
+			}
+		}
+		return locations;
 	}
 }
 

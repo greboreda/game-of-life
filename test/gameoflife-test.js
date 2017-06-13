@@ -157,4 +157,13 @@ describe('Game of Life', function() {
 		}).should.to.throw(Error, 'Invalid configuration: many cells have invalid locations');
 	});
 
+	it('foo', function() {
+		let gol = new GameOfLife({
+			rows: 2,
+			cols: 1,
+			locationsWithLivingCell: [new Location(0,0)]
+		});
+		gol.emptyLocations.should.be.an('array').that.have.lengthOf(1);
+		gol.emptyLocations.should.deep.contain(new Location(1,0));
+	});
 })

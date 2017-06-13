@@ -4,6 +4,7 @@ class GameOfLife {
 	constructor(config) {
 
 		this.world = new World(config.rows, config.cols);
+		//TODO maybe can use isCellAlive method
 		this.livings = config.locationsWithLivingCell.filter(function(location, index, self) {
 			let foundIndex = self.findIndex(function(l) {
 				return l.x === location.x && l.y === location.y; 
@@ -17,7 +18,21 @@ class GameOfLife {
 		}, this);
 	}
 
+	isCellAlive(location) {
+		for(let i=0 ; i<this.livings.length ; i++) {
+			let current = this.livings[i];
+			if(current.equals(location)) {
+				return true;
+			}
+			return false;
+		}
+	}
+
 	iterate() {
+		let bornCells = [];
+		for(let i=0 ; i<this.emptyLocations.length ; i++) {
+
+		}
 
 	}
 
@@ -30,21 +45,9 @@ class GameOfLife {
 	}
 
 	get emptyLocations() {
-		let emptyLocations = [];
-		let allLocations = this.world.allLocations;
-		for(let i=0 ; i<allLocations.length ; i++) {
-			let found = false;
-			for(let j=0 ; j<this.livings.length; j++) {
-				if(this.livings[j].equals(allLocations[i])) {
-					found = true;
-					break;
-				}
-			}
-			if(!found) {
-				emptyLocations.push(allLocations[i]);
-			}
-		}
-		return emptyLocations;
+		return this.world.allLocations.filter(function(location) {
+			return !this.isCellAlive(location);
+		}, this);
 	}
 }
 

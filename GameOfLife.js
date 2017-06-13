@@ -4,25 +4,14 @@ class GameOfLife {
 	constructor(config) {
 
 		this.world = new World(config.rows, config.cols);
-		this.livings = [];
-
-		for(let i=0 ; i<config.locationsWithLivingCell.length ; i++) {
-			let currentLocation = config.locationsWithLivingCell[i];
-
-			let savedLocation = this.livings.find(function(current) {
-				return current.equals(currentLocation);
-			});
-
-			if(!savedLocation) {
-				this.livings.push(currentLocation);
-			}
-		}
-
-		for(let i=0 ; i<this.livings.length ; i++) {
-			if(!this.world.containsLocation(this.livings[i])) {
+		this.livings = config.locationsWithLivingCell.filter(function(location, index, self) {
+			return self.findIndex((l) => {return l.x === location.x && l.y === location.y; }) === index;
+		});
+		this.livings.forEach(function(location, index) {
+			if(!this.world.containsLocation(location)) {
 				throw new Error('Invalid configuration: many cells have invalid locations');
 			}
-		}
+		}, this);
 	}
 
 	iterate() {

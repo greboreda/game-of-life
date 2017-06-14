@@ -235,18 +235,17 @@ describe('Game of Life', function() {
 
 		it('should not born cell when have 4 alive neighboors', function() {
 
+			let deadByIsolation = new Location(2,2);
+
 			let gol = new GameOfLife({
-				rows: 4,
-				cols: 4,
-				locationsWithLivingCell: [	new Location(0,0),
-											new Location(0,1),
-											new Location(1,0),
-											new Location(1,2) ]
+				rows: 5,
+				cols: 5,
+				locationsWithLivingCell: deadByIsolation.neighboors.splice(4)
 			});
-			let deadByIsolation = new Location(1,1);
 
 			let iteration = gol.iterate();
 
+			gol.numberLivings.should.be.equal(4);
 			gol.isCellAlive(deadByIsolation).should.be.false;
 			iteration.isCellAlive(deadByIsolation).should.be.false;
 

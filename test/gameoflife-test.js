@@ -338,7 +338,192 @@ describe('Game of Life', function() {
 
 		});
 
+	});
+
+	describe('survivor cells', function() {
+
+		it('should survive when have 2 alive neighboors', function() {
+
+			let survivor = new Location(0,0);
+
+			let gol = new GameOfLife({
+				rows: 4,
+				cols: 4,
+				locationsWithLivingCell: [	survivor, 
+											new Location(0,1),
+											new Location(1,0)]
+
+			});
+
+			let iteration = gol.iterate();
+
+			gol.isCellAlive(survivor).should.be.true;
+			iteration.isCellAlive(survivor).should.be.true;
+
+		});
+
+
+		it('should survive when have 3 alive neighboors', function() {
+
+			let survivor = new Location(0,0);
+
+			let gol = new GameOfLife({
+				rows: 4,
+				cols: 4,
+				locationsWithLivingCell: [	survivor, 
+											new Location(0,1),
+											new Location(1,0),
+											new Location(1,1)]
+
+			});
+
+			let iteration = gol.iterate();
+
+			gol.isCellAlive(survivor).should.be.true;
+			iteration.isCellAlive(survivor).should.be.true;
+
+		});
 
 	});
+
+	describe('dead cells', function() {
+
+		it('should dead when have 0 alive neighboors', function() {
+
+			let alive = new Location(0,0);
+
+			let gol = new GameOfLife({
+				rows: 4,
+				cols: 4,
+				locationsWithLivingCell: [alive]
+
+			});
+
+			let iteration = gol.iterate();
+
+			gol.isCellAlive(alive).should.be.true;
+			iteration.isCellAlive(alive).should.be.false;
+
+		});
+
+
+		it('should dead when have 1 alive neighboors', function() {
+
+			let alive = new Location(0,0);
+
+			let gol = new GameOfLife({
+				rows: 4,
+				cols: 4,
+				locationsWithLivingCell: [alive, new Location(0,1)]
+
+			});
+
+			let iteration = gol.iterate();
+
+			gol.isCellAlive(alive).should.be.true;
+			iteration.isCellAlive(alive).should.be.false;
+
+		});
+
+		it('should dead when have 4 alive neighboors', function() {
+
+			let alive = new Location(1,1);
+
+			let gol = new GameOfLife({
+				rows: 4,
+				cols: 4,
+				locationsWithLivingCell: [	alive, 
+											new Location(1,0),
+											new Location(1,2),
+											new Location(0,1),
+											new Location(0,2)]
+
+			});
+
+			let iteration = gol.iterate();
+
+			gol.isCellAlive(alive).should.be.true;
+			iteration.isCellAlive(alive).should.be.false;
+
+		});
+
+		it('should dead when have 5 alive neighboors', function() {
+
+			let alive = new Location(1,1);
+
+			let gol = new GameOfLife({
+				rows: 4,
+				cols: 4,
+				locationsWithLivingCell: [	alive, 
+											new Location(0,0),
+											new Location(1,0),
+											new Location(1,2),
+											new Location(0,1),
+											new Location(0,2)]
+
+			});
+
+			let iteration = gol.iterate();
+
+			gol.isCellAlive(alive).should.be.true;
+			iteration.isCellAlive(alive).should.be.false;
+
+		});
+
+		it('should dead when have 6 alive neighboors', function() {
+
+			let alive = new Location(2,2);
+
+			let gol = new GameOfLife({
+				rows: 5,
+				cols: 5,
+				locationsWithLivingCell: [alive].concat(alive.neighboors.splice(2))
+			});
+
+			let iteration = gol.iterate();
+
+			gol.isCellAlive(alive).should.be.true;
+			iteration.isCellAlive(alive).should.be.false;
+
+		});
+
+		it('should dead when have 7 alive neighboors', function() {
+
+			let alive = new Location(2,2);
+
+			let gol = new GameOfLife({
+				rows: 5,
+				cols: 5,
+				locationsWithLivingCell: [alive].concat(alive.neighboors.splice(1))
+			});
+
+			let iteration = gol.iterate();
+
+			gol.isCellAlive(alive).should.be.true;
+			iteration.isCellAlive(alive).should.be.false;
+
+		});
+
+		it('should dead when have 8 alive neighboors', function() {
+
+			let alive = new Location(2,2);
+
+			let gol = new GameOfLife({
+				rows: 5,
+				cols: 5,
+				locationsWithLivingCell: [alive].concat(alive.neighboors)
+			});
+
+			let iteration = gol.iterate();
+
+			gol.isCellAlive(alive).should.be.true;
+			iteration.isCellAlive(alive).should.be.false;
+
+		});
+
+
+
+	});
+
 
 })

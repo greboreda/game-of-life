@@ -40,10 +40,23 @@ class GameOfLife {
 				bornCells.push(current);
 			}
 		}
+
+		let survivorCells = [];
+		for(let i=0 ; i<this.livings.length ; i++) {
+			let current = this.livings[i];
+			let neighboors = this.world.convertLocations(current.neighboors);
+			let livingNeighbors = neighboors.filter(function(location) {
+				return this.isCellAlive(location);
+			}, this);
+			if(livingNeighbors.length === 2 || livingNeighbors.length === 3) {
+				survivorCells.push(current);
+			}
+		}
+
 		return new GameOfLife({
 			rows: this.world.rows,
 			cols: this.world.cols,
-			locationsWithLivingCell: bornCells
+			locationsWithLivingCell: bornCells.concat(survivorCells)
 		});
 	}
 

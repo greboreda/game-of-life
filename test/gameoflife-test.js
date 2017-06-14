@@ -12,19 +12,19 @@ describe('Location', function() {
 		location1.should.be.eql(location2);
 	});
 
-	it('should be equal to another with distinct x and same y', function() {
+	it('should not be equal to another with distinct x and same y', function() {
 		let location1 = new Location(0, 0);
 		let location2 = new Location(1, 0);
 		location1.should.not.be.eql(location2);
 	});
 
-	it('should be equal to another with same x and distinct y', function() {
+	it('should not be equal to another with same x and distinct y', function() {
 		let location1 = new Location(0, 0);
 		let location2 = new Location(0, 1);
 		location1.should.not.be.eql(location2);
 	});
 
-	it('should be equal to another with distinct x and y', function() {
+	it('should not be equal to another with distinct x and y', function() {
 		let location1 = new Location(0, 0);
 		let location2 = new Location(1, 1);
 		location1.should.not.be.eql(location2);

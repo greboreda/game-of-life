@@ -1,0 +1,25 @@
+{
+	"name": "gameoflife",
+	"description": "a game of life component",
+	"version": "0.0.1",
+	"license": "WTFPL",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/greboreda/game-of-life"
+	},
+	"author": {
+		"name": "Guillermo Reboreda",
+		"email": "guillermo.reboreda@gmail.com"
+	},
+	"dependencies": {
+		"jquery": "^3.2.1"
+	},
+	"devDependencies": {
+		"grunt": "^1.0.1",
+		"mocha": "^3.4.2",
+		"chai": "^4.0.2"
+	},
+	"scripts": {
+		"test": "mocha"
+	}
+}

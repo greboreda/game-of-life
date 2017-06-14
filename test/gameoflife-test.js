@@ -220,11 +220,11 @@ describe('Game of Life', function() {
 		it('should not born cell when have 0 alive neighboors', function() {
 
 			let gol = new GameOfLife({
-				rows: 4,
-				cols: 4,
+				rows: 5,
+				cols: 5,
 				locationsWithLivingCell: []
 			});
-			let deadByIsolation = new Location(1,1);
+			let deadByIsolation = new Location(2,2);
 
 			let iteration = gol.iterate();
 
@@ -253,19 +253,17 @@ describe('Game of Life', function() {
 
 		it('should not born cell when have 5 alive neighboors', function() {
 
+			let deadByIsolation = new Location(2,2);
+
 			let gol = new GameOfLife({
-				rows: 4,
-				cols: 4,
-				locationsWithLivingCell: [	new Location(0,0), 
-											new Location(0,1),
-											new Location(1,0),
-											new Location(0,2),
-											new Location(1,2)]
+				rows: 5,
+				cols: 5,
+				locationsWithLivingCell: deadByIsolation.neighboors.splice(3)
 			});
-			let deadByIsolation = new Location(1,1);
 
 			let iteration = gol.iterate();
 
+			gol.numberLivings.should.be.equal(5);
 			gol.isCellAlive(deadByIsolation).should.be.false;
 			iteration.isCellAlive(deadByIsolation).should.be.false;
 
@@ -273,20 +271,18 @@ describe('Game of Life', function() {
 
 		it('should not born cell when have 6 alive neighboors', function() {
 
+
+			let deadByIsolation = new Location(2,2);
+
 			let gol = new GameOfLife({
-				rows: 4,
-				cols: 4,
-				locationsWithLivingCell: [	new Location(0,0), 
-											new Location(0,1),
-											new Location(1,0),
-											new Location(0,2),
-											new Location(1,2),
-											new Location(2,0)]
+				rows: 5,
+				cols: 5,
+				locationsWithLivingCell: deadByIsolation.neighboors.splice(2)
 			});
-			let deadByIsolation = new Location(1,1);
 
 			let iteration = gol.iterate();
 
+			gol.numberLivings.should.be.equal(6);
 			gol.isCellAlive(deadByIsolation).should.be.false;
 			iteration.isCellAlive(deadByIsolation).should.be.false;
 
@@ -294,21 +290,17 @@ describe('Game of Life', function() {
 
 		it('should not born cell when have 7 alive neighboors', function() {
 
+			let deadByIsolation = new Location(2,2);
+
 			let gol = new GameOfLife({
-				rows: 4,
-				cols: 4,
-				locationsWithLivingCell: [	new Location(0,0), 
-											new Location(0,1),
-											new Location(1,0),
-											new Location(0,2),
-											new Location(1,2),
-											new Location(2,0),
-											new Location(2,1)]
+				rows: 5,
+				cols: 5,
+				locationsWithLivingCell: deadByIsolation.neighboors.splice(1)
 			});
-			let deadByIsolation = new Location(1,1);
 
 			let iteration = gol.iterate();
 
+			gol.numberLivings.should.be.equal(7);
 			gol.isCellAlive(deadByIsolation).should.be.false;
 			iteration.isCellAlive(deadByIsolation).should.be.false;
 
@@ -316,22 +308,17 @@ describe('Game of Life', function() {
 
 		it('should not born cell when have 8 alive neighboors', function() {
 
+			let deadByIsolation = new Location(2,2);
+
 			let gol = new GameOfLife({
-				rows: 4,
-				cols: 4,
-				locationsWithLivingCell: [	new Location(0,0), 
-											new Location(0,1),
-											new Location(1,0),
-											new Location(0,2),
-											new Location(1,2),
-											new Location(2,0),
-											new Location(2,1),
-											new Location(2,2)]
+				rows: 5,
+				cols: 5,
+				locationsWithLivingCell: deadByIsolation.neighboors
 			});
-			let deadByIsolation = new Location(1,1);
 
 			let iteration = gol.iterate();
 
+			gol.numberLivings.should.be.equal(8);
 			gol.isCellAlive(deadByIsolation).should.be.false;
 			iteration.isCellAlive(deadByIsolation).should.be.false;
 
@@ -343,19 +330,18 @@ describe('Game of Life', function() {
 
 		it('should survive when have 2 alive neighboors', function() {
 
-			let survivor = new Location(0,0);
+			let survivor = new Location(2,2);
 
 			let gol = new GameOfLife({
-				rows: 4,
-				cols: 4,
-				locationsWithLivingCell: [	survivor, 
-											new Location(0,1),
-											new Location(1,0)]
+				rows: 5,
+				cols: 5,
+				locationsWithLivingCell: [survivor].concat(survivor.neighboors.splice(6))
 
 			});
 
 			let iteration = gol.iterate();
 
+			gol.numberLivings.should.be.equal(3);
 			gol.isCellAlive(survivor).should.be.true;
 			iteration.isCellAlive(survivor).should.be.true;
 
@@ -364,20 +350,18 @@ describe('Game of Life', function() {
 
 		it('should survive when have 3 alive neighboors', function() {
 
-			let survivor = new Location(0,0);
+			let survivor = new Location(2,2);
 
 			let gol = new GameOfLife({
-				rows: 4,
-				cols: 4,
-				locationsWithLivingCell: [	survivor, 
-											new Location(0,1),
-											new Location(1,0),
-											new Location(1,1)]
+				rows: 5,
+				cols: 5,
+				locationsWithLivingCell: [survivor].concat(survivor.neighboors.splice(5))
 
 			});
 
 			let iteration = gol.iterate();
 
+			gol.numberLivings.should.be.equal(4);
 			gol.isCellAlive(survivor).should.be.true;
 			iteration.isCellAlive(survivor).should.be.true;
 
@@ -426,21 +410,18 @@ describe('Game of Life', function() {
 
 		it('should dead when have 4 alive neighboors', function() {
 
-			let alive = new Location(1,1);
+			let alive = new Location(2,2);
 
 			let gol = new GameOfLife({
-				rows: 4,
-				cols: 4,
-				locationsWithLivingCell: [	alive, 
-											new Location(1,0),
-											new Location(1,2),
-											new Location(0,1),
-											new Location(0,2)]
+				rows: 5,
+				cols: 5,
+				locationsWithLivingCell: [alive].concat(alive.neighboors.splice(4))
 
 			});
 
 			let iteration = gol.iterate();
 
+			gol.numberLivings.should.be.equal(5);
 			gol.isCellAlive(alive).should.be.true;
 			iteration.isCellAlive(alive).should.be.false;
 
@@ -448,22 +429,18 @@ describe('Game of Life', function() {
 
 		it('should dead when have 5 alive neighboors', function() {
 
-			let alive = new Location(1,1);
+			let alive = new Location(2,2);
 
 			let gol = new GameOfLife({
-				rows: 4,
-				cols: 4,
-				locationsWithLivingCell: [	alive, 
-											new Location(0,0),
-											new Location(1,0),
-											new Location(1,2),
-											new Location(0,1),
-											new Location(0,2)]
+				rows: 5,
+				cols: 5,
+				locationsWithLivingCell: [alive].concat(alive.neighboors.splice(3))
 
 			});
 
 			let iteration = gol.iterate();
 
+			gol.numberLivings.should.be.equal(6);
 			gol.isCellAlive(alive).should.be.true;
 			iteration.isCellAlive(alive).should.be.false;
 

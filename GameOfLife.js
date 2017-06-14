@@ -61,7 +61,16 @@ class GameOfLife {
 	}
 
 	repr() {
-
+		let repr = "";
+		for(let i=0 ; i<this.world.rows; i++) {
+			for(let j=0 ; j<this.world.cols; j++) {
+				let current = new Location(i,j);
+				let sym = this.isCellAlive(current) ? ' 0 ' : ' · ' ;
+				repr += sym;
+			}
+			repr += '\n';
+		}
+		return repr;
 	}
 
 	get numberLivings() {

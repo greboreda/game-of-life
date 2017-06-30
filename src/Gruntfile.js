@@ -7,7 +7,7 @@ module.exports = function(grunt) {
 			options: {
 				transform: [["babelify", { "stage": 0 }]],
 				browserifyOptions: {
-					standalone: 'GameOfLife'
+					standalone: 'gol'
 				}
 			},
 			files: {

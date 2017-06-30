@@ -3,7 +3,7 @@ $(document).ready(function() {
 });
 
 var gameOfLifeManager = (function() {
-	var gol = new GameOfLife({
+	var game = new gol.GameOfLife({
                         rows: 1,
                         cols: 1,
                         locationsWithLivingCell: []

@@ -53,11 +53,11 @@ class Grid {
 		this.rows = conf.rows;
 		this.cols = conf.cols;
 
-		this.canvas = $('<canvas/>').attr({width: this.width, height: this.height}).appendTo('#' + this.containerId);
+		var $canvas = $('<canvas/>').attr({width: this.width, height: this.height}).appendTo('#' + this.containerId);
 
-		var canv = this.canvas.get(0);
+		this.canvas = $canvas.get(0);
 
-		var ctx = canv.getContext("2d");
+		var ctx = this.canvas.getContext("2d");
 		ctx.fillStyle = "black";
 		ctx.fillRect(0, 0, this.width, this.height);
 

@@ -29,10 +29,13 @@ var gameOfLifeManager = (function() {
 			width: width,
 			height: height,
 			rows: rows,
-			cols: cols
+			cols: cols,
+			backgroundColor: 'black'
 		};
 
 		var grid = new Grid(gridConf);
+
+		grid.changeCellColor(2,2,'white');
 
 	}
 
@@ -52,14 +55,31 @@ class Grid {
 		this.height = conf.height;
 		this.rows = conf.rows;
 		this.cols = conf.cols;
+		this.backgroundColor = conf.backgroundColor;
 
-		var $canvas = $('<canvas/>').attr({width: this.width, height: this.height}).appendTo('#' + this.containerId);
+		this.cellWidth = this.width/this.cols;
+		this.cellHeight = this.height/this.rows;
+
+		var $canvas = $('<canvas/>')
+			.attr({width: this.width, height: this.height})
+			.appendTo('#' + this.containerId);
 
 		this.canvas = $canvas.get(0);
+		this.canvasCtx = this.canvas.getContext("2d");
 
-		var ctx = this.canvas.getContext("2d");
-		ctx.fillStyle = "black";
-		ctx.fillRect(0, 0, this.width, this.height);
+		this.canvasCtx.fillStyle = this.backgroundColor;
+		this.canvasCtx.fillRect(0, 0, this.width, this.height);
+
+	}
+
+	changeCellColor(x, y, color) {
+
+		var startX = x*this.cellHeight;
+		var startY = y*this.cellWidth;
+
+		this.canvasCtx.fillStyle = color;
+		this.canvasCtx.fillRect(startX, startY, this.cellWidth, this.cellHeight);
+		this.canvasCtx.fillStyle = this.backgroundColor;
 
 	}
 

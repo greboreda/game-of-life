@@ -23,14 +23,6 @@ var gameOfLifeManager = (function() {
 
 	var game, grid;
 
-	function updateGridWithLivings() {
-		grid.clean();
-		for(var i=0 ; i<game.livings.length ; i++) {
-			var location = game.livings[i];
-			grid.changeCellColor(location.x, location.y, 'white');
-		}		
-	}
-
 	function init(conf) {
 
 		game = new gol.GameOfLife({
@@ -49,10 +41,19 @@ var gameOfLifeManager = (function() {
 		};
 
 		grid = new Grid(gridConf);
-		updateGridWithLivings();
 	}
 
 	function start() {
+
+		var updateGridWithLivings = function() {
+			grid.clean();
+			for(var i=0 ; i<game.livings.length ; i++) {
+				var location = game.livings[i];
+				grid.changeCellColor(location.x, location.y, 'white');
+			}		
+		}
+
+		updateGridWithLivings();
 		var loop = function() {
 			setTimeout(function() {
 				game = game.iterate();
@@ -98,8 +99,8 @@ class Grid {
 
 	changeCellColor(x, y, color) {
 
-		var startX = x*this.cellHeight;
-		var startY = y*this.cellWidth;
+		var startY = x*this.cellHeight;
+		var startX = y*this.cellWidth;
 
 		this.canvasCtx.fillStyle = color;
 		this.canvasCtx.fillRect(startX, startY, this.cellWidth, this.cellHeight);

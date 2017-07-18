@@ -5,42 +5,67 @@ $(document).ready(function() {
 		width: 400,
 		height: 200,
 		rows: 10,
-		cols: 20
-	}
+		cols: 20,
+		livings: [
+			new gol.Location(0,1),
+			new gol.Location(1,2),
+			new gol.Location(2,0),
+			new gol.Location(2,1),
+			new gol.Location(2,2)
+		]
+	};
 
 	gameOfLifeManager.init(golConf);
+	gameOfLifeManager.start();
 });
 
 var gameOfLifeManager = (function() {
 
-	var game = new gol.GameOfLife({
-                        rows: 1,
-                        cols: 1,
-                        locationsWithLivingCell: []
-                });
+	var game, grid;
 
-	function init(conf) {
-		initGrid(conf.containerId, conf.width, conf.height, conf.rows, conf.cols);
+	function updateGridWithLivings() {
+		grid.clean();
+		for(var i=0 ; i<game.livings.length ; i++) {
+			var location = game.livings[i];
+			grid.changeCellColor(location.x, location.y, 'white');
+		}		
 	}
 
-	function initGrid(containerId, width, height, rows, cols) {
+	function init(conf) {
+
+		game = new gol.GameOfLife({
+			rows: conf.rows,
+			cols: conf.cols,
+			locationsWithLivingCell: conf.livings
+		});
+
 		var gridConf = {
-			containerId: containerId,
-			width: width,
-			height: height,
-			rows: rows,
-			cols: cols,
+			containerId: conf.containerId,
+			width: conf.width,
+			height: conf.height,
+			rows: conf.rows,
+			cols: conf.cols,
 			backgroundColor: 'black'
 		};
 
-		var grid = new Grid(gridConf);
+		grid = new Grid(gridConf);
+		updateGridWithLivings();
+	}
 
-		grid.changeCellColor(2,2,'white');
-
+	function start() {
+		var loop = function() {
+			setTimeout(function() {
+				game = game.iterate();
+				updateGridWithLivings();
+				loop();
+			}, 100);
+		}
+		loop();
 	}
 
 	return {
-		init: init
+		init: init,
+		start: start
 	};
 
 })();
@@ -67,8 +92,7 @@ class Grid {
 		this.canvas = $canvas.get(0);
 		this.canvasCtx = this.canvas.getContext("2d");
 
-		this.canvasCtx.fillStyle = this.backgroundColor;
-		this.canvasCtx.fillRect(0, 0, this.width, this.height);
+		this.clean();
 
 	}
 
@@ -81,6 +105,11 @@ class Grid {
 		this.canvasCtx.fillRect(startX, startY, this.cellWidth, this.cellHeight);
 		this.canvasCtx.fillStyle = this.backgroundColor;
 
+	}
+
+	clean() {
+		this.canvasCtx.fillStyle = this.backgroundColor;
+		this.canvasCtx.fillRect(0, 0, this.width, this.height);		
 	}
 
 }

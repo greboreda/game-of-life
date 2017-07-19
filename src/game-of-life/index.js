@@ -1,3 +1,98 @@
+class GameOfLifeComponent {
+
+	constructor(conf) {
+
+		this.game = new gol.GameOfLife({
+			rows: conf.rows,
+			cols: conf.cols,
+			locationsWithLivingCell: conf.livings
+		});
+
+		this.grid = new Grid({
+			containerId: conf.containerId,
+			width: conf.width,
+			height: conf.height,
+			rows: conf.rows,
+			cols: conf.cols,
+			backgroundColor: 'black'
+		});
+
+		this.period = conf.period;
+		this._updateGrid();
+	}
+
+	play() {
+		if(this.intervalId) {
+			console.log('game is currently playing!');
+			return;
+		}
+
+		var iterate = (function() {
+			this.game = this.game.iterate();		
+			this._updateGrid();
+		}).bind(this);
+
+		this.intervalId = setInterval(iterate, this.period);
+	}
+
+	pause() {
+		if(this.intervalId) {
+			clearInterval(this.intervalId);
+			this.intervalId = null;
+		}
+	}
+
+	_updateGrid() {
+		this.grid.clean();
+		for(var i=0 ; i<this.game.livings.length ; i++) {
+			var location = this.game.livings[i];
+			this.grid.changeCellColor(location.x, location.y, 'white');
+		}		
+	}
+
+}
+
+class Grid {
+
+	constructor(conf) {
+		
+		this.containerId = conf.containerId;
+		this.width = conf.width;
+		this.height = conf.height;
+		this.rows = conf.rows;
+		this.cols = conf.cols;
+		this.backgroundColor = conf.backgroundColor;
+
+		this.cellWidth = this.width/this.cols;
+		this.cellHeight = this.height/this.rows;
+
+		var $canvas = $('<canvas/>')
+			.attr({width: this.width, height: this.height})
+			.appendTo('#' + this.containerId);
+
+		this.canvas = $canvas.get(0);
+		this.canvasCtx = this.canvas.getContext("2d");
+
+		this.clean();
+
+	}
+
+	changeCellColor(x, y, color) {
+		var startY = x*this.cellHeight;
+		var startX = y*this.cellWidth;
+		this.canvasCtx.fillStyle = color;
+		this.canvasCtx.fillRect(startX, startY, this.cellWidth, this.cellHeight);
+		this.canvasCtx.fillStyle = this.backgroundColor;
+	}
+
+	clean() {
+		this.canvasCtx.fillStyle = this.backgroundColor;
+		this.canvasCtx.fillRect(0, 0, this.width, this.height);		
+	}
+
+}
+
+
 
 class GameOfLife {
 
@@ -22,7 +117,7 @@ class GameOfLife {
 			locationsToEvaluate.appendLocations(this.world.neighboors(current));
 		}, this);
 
-		var newxtGenLivings = [];
+		var nextGenLivings = [];
 
 		locationsToEvaluate.toArray().forEach(function(current) {
 
@@ -30,9 +125,9 @@ class GameOfLife {
 			let aliveNeighboors = this.world.neighboors(current).filter(l => this.isCellAlive(l));
 
 			if(!isAlive && aliveNeighboors.length === 3) {
-				newxtGenLivings.push(current);
+				nextGenLivings.push(current);
 			} else if(isAlive && (aliveNeighboors.length === 2 || aliveNeighboors.length === 3)) {
-				newxtGenLivings.push(current);
+				nextGenLivings.push(current);
 			}
 
 		}, this);
@@ -40,7 +135,7 @@ class GameOfLife {
 		return new GameOfLife({
 			rows: this.world.rows,
 			cols: this.world.cols,
-			locationsWithLivingCell: newxtGenLivings
+			locationsWithLivingCell: nextGenLivings
 		});
 	}
 
@@ -152,6 +247,7 @@ class LocationSet {
 }
 
 module.exports = {
+	GameOfLifeComponent: GameOfLifeComponent,
 	GameOfLife: GameOfLife,
 	World: World,
 	Location: Location

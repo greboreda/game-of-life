@@ -4,14 +4,14 @@ module.exports = function(grunt) {
 		pkg: grunt.file.readJSON('package.json'),
 		browserify: {
 			dist: {
-			options: {
-				transform: [["babelify", { "stage": 0 }]],
-				browserifyOptions: {
-					standalone: 'gol'
-				}
-			},
-			files: {
-				"build/gol.js": "game-of-life/index.js"
+				files: {
+					"build/gol.js": "game-of-life/index.js"
+				},
+				options: {
+					transform: [["babelify", { "stage": 0 }]],
+					browserifyOptions: {
+						standalone: 'gol'
+					}
 				}
 			}
 		},

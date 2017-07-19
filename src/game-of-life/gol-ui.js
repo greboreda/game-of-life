@@ -6,8 +6,8 @@ $(document).ready(function() {
 	var conf = {
 		containerId: 'game-of-life',
 		width: 800,
-		height: 200,
-		rows: 20,
+		height: 600,
+		rows: 80,
 		cols: 80,
 		period: 100,
 		livings: [

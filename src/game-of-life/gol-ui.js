@@ -2,10 +2,6 @@ $(document).ready(function() {
 
 	var golConf = {
 		containerId: 'game-of-life',
-		width: 800,
-		height: 400,
-		rows: 200,
-		cols: 400,
 		livings: [
 			new gol.Location(0,1),
 			new gol.Location(1,2),
@@ -25,18 +21,30 @@ var gameOfLifeManager = (function() {
 
 	function init(conf) {
 
+		var $container = $('#' + conf.containerId);
+
+		var rows = $container.attr('data-rows');
+		var cols = $container.attr('data-cols');
+		var width = $container.attr('data-width');
+		var height = $container.attr('data-height');
+
+		console.log(rows);
+		console.log(cols);
+		console.log(width);
+		console.log(height);
+
 		game = new gol.GameOfLife({
-			rows: conf.rows,
-			cols: conf.cols,
+			rows: rows,
+			cols: cols,
 			locationsWithLivingCell: conf.livings
 		});
 
 		var gridConf = {
 			containerId: conf.containerId,
-			width: conf.width,
-			height: conf.height,
-			rows: conf.rows,
-			cols: conf.cols,
+			width: width,
+			height: height,
+			rows: rows,
+			cols: cols,
 			backgroundColor: 'black'
 		};
 

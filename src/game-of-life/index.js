@@ -19,6 +19,10 @@ class GameOfLife {
 	}
 
 	isCellAlive(location) {
+
+		return this.livings.filter(l => l.equals(location)).length > 0;
+
+		/*
 		for(let i=0 ; i<this.livings.length ; i++) {
 			let current = this.livings[i];
 			if(current.equals(location)) {
@@ -26,6 +30,7 @@ class GameOfLife {
 			}
 		}
 		return false;
+		*/
 	}
 
 	iterate() {

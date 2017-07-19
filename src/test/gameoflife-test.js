@@ -71,10 +71,6 @@ describe('Location', function() {
 
 describe('World', function() {
 
-	it('should have area equal to rows * cols', function() {
-		new World(2, 2).area.should.be.equal(4);
-	});
-
 	it('should not contains locations with negative coordinates', function() {
 		new World(2, 2).containsLocation(new Location(-1,-1)).should.be.false;
 	});
@@ -155,16 +151,6 @@ describe('Game of Life', function() {
 				locationsWithLivingCell: [new Location(1,1)]
 			})
 		}).should.to.throw(Error, 'Invalid configuration: many cells have invalid locations');
-	});
-
-	it('should detect empty locations', function() {
-		let gol = new GameOfLife({
-			rows: 2,
-			cols: 1,
-			locationsWithLivingCell: [new Location(0,0)]
-		});
-		gol.emptyLocations.should.be.an('array').that.have.lengthOf(1);
-		gol.emptyLocations.should.deep.contain(new Location(1,0));
 	});
 
 	describe('born cells', function() {

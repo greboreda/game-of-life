@@ -31,7 +31,6 @@ class GameOfLife {
 	iterate() {
 		let bornCells = [];
 
-
 		//var locationsToEvaluate = this.emptyLocations;
 		var locationsToEvaluate = [];
 
@@ -71,28 +70,10 @@ class GameOfLife {
 		});
 	}
 
-	repr() {
-		let repr = "";
-		for(let i=0 ; i<this.world.rows; i++) {
-			for(let j=0 ; j<this.world.cols; j++) {
-				let current = new Location(i,j);
-				let sym = this.isCellAlive(current) ? ' 0 ' : ' · ' ;
-				repr += sym;
-			}
-			repr += '\n';
-		}
-		return repr;
-	}
-
 	get numberLivings() {
 		return this.livings.length;
 	}
 
-	get emptyLocations() {
-		return this.world.allLocations.filter(function(location) {
-			return !this.isCellAlive(location);
-		}, this);
-	}
 }
 
 class World {
@@ -120,21 +101,7 @@ class World {
 
 	convertLocations(locations) {
 		return locations.map( l => this.convertLocation(l) );
-	}
-
-	get area() {
-		return this.rows * this.cols;
-	}
-
-	get allLocations() {
-		let locations = [];
-		for(let i=0 ; i<this.rows ; i++) {
-			for(let j=0 ; j<this.cols ; j++) {
-				locations.push(new Location(i,j));
-			}
-		}
-		return locations;
-	}
+	}	
 }
 
 class Location {

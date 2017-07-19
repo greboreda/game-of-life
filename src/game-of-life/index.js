@@ -30,8 +30,19 @@ class GameOfLife {
 
 	iterate() {
 		let bornCells = [];
-		for(let i=0 ; i<this.emptyLocations.length ; i++) {
-			let current = this.emptyLocations[i];
+
+
+		//var locationsToEvaluate = this.emptyLocations;
+		var locationsToEvaluate = [];
+
+		for(var i=0; i<this.livings.length ; i++) {
+			let current = this.livings[i];
+			let neighboors = this.world.convertLocations(current.neighboors);
+			locationsToEvaluate = locationsToEvaluate.concat(neighboors);
+		}
+
+		for(let i=0 ; i<locationsToEvaluate.length ; i++) {
+			let current = locationsToEvaluate[i];
 			let neighboors = this.world.convertLocations(current.neighboors);
 			let livingNeighbors = neighboors.filter(function(location) {
 				return this.isCellAlive(location);

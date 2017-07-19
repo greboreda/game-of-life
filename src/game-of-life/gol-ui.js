@@ -2,10 +2,10 @@ $(document).ready(function() {
 
 	var golConf = {
 		containerId: 'game-of-life',
-		width: 400,
-		height: 200,
-		rows: 10,
-		cols: 20,
+		width: 800,
+		height: 400,
+		rows: 200,
+		cols: 400,
 		livings: [
 			new gol.Location(0,1),
 			new gol.Location(1,2),

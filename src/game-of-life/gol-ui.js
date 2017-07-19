@@ -1,8 +1,9 @@
 var golComponent;
+var golComponent2;
 
 $(document).ready(function() {
 
-	golComponent = new gol.GameOfLifeComponent({
+	var conf = {
 		containerId: 'game-of-life',
 		width: 800,
 		height: 200,
@@ -16,9 +17,17 @@ $(document).ready(function() {
 			new gol.Location(2,1),
 			new gol.Location(2,2)
 		]
-	});
+	};
 
+	golComponent = new gol.GameOfLifeComponent(conf);
 	golComponent.play()
+
+	/*
+	conf.containerId = 'game-of-life-2';
+	golComponent2 = new gol.GameOfLifeComponent(conf);
+	golComponent2.play();
+	*/
+
 
 });
 

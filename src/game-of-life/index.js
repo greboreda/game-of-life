@@ -20,11 +20,31 @@ class GameOfLifeComponent {
 		this.period = conf.period;
 		this._updateGrid();
 
-		$('#' + conf.containerId).on('gridClick', function(e, obj) {
+		var containerSelector = '#' + conf.containerId;
+
+		$(containerSelector).on('gridClick', function(e, obj) {
 			var location = new Location(obj.coords.x, obj.coords.y);
 			this._toggleLivingCell(location);
 
-		}.bind(this)); 
+		}.bind(this));
+
+
+		var $playButton = $('<button>',
+			{
+				text: 'play',
+				click: function(e) {
+					this.play();
+				}.bind(this)
+			}).appendTo(containerSelector);
+
+		var $pauseButton = $('<button>',
+			{
+				text: 'pause',
+				click: function(e) {
+					this.pause();
+				}.bind(this)
+			}).appendTo(containerSelector);
+
 	}
 
 	_toggleLivingCell(location) {
@@ -274,7 +294,7 @@ class LocationSet {
 				return current.equals(location);
 			});
 			if(index>-1) {
-				this.set.remove(index);
+				this.set.splice(index, 1);
 			}
 		}
 	}

@@ -2,83 +2,51 @@
 class GameOfLife {
 
 	constructor(config) {
-
 		this.world = new World(config.rows, config.cols);
-		//TODO maybe can use isCellAlive method
-		this.livings = config.locationsWithLivingCell.filter(function(location, index, self) {
-			let foundIndex = self.findIndex(function(l) {
-				return l.x === location.x && l.y === location.y; 
-			});
-			return foundIndex === index;
-		});
-		this.livings.forEach(function(location, index) {
-			if(!this.world.containsLocation(location)) {
-				throw new Error('Invalid configuration: many cells have invalid locations');
-			}
-		}, this);
+		this.livings = new LocationSet(config.locationsWithLivingCell).toArray();
+		if(this.livings.find(l => !this.world.containsLocation(l))) {
+			throw new Error('Invalid configuration: many cells have invalid locations');
+		}
 	}
 
 	isCellAlive(location) {
-
 		return this.livings.filter(l => l.equals(location)).length > 0;
-
-		/*
-		for(let i=0 ; i<this.livings.length ; i++) {
-			let current = this.livings[i];
-			if(current.equals(location)) {
-				return true;
-			}
-		}
-		return false;
-		*/
 	}
 
 	iterate() {
-		let bornCells = [];
 
-		//var locationsToEvaluate = this.emptyLocations;
-		var locationsToEvaluate = [];
+		var locationsToEvaluate = new LocationSet();
 
-		for(var i=0; i<this.livings.length ; i++) {
-			let current = this.livings[i];
-			let neighboors = this.world.convertLocations(current.neighboors);
-			locationsToEvaluate = locationsToEvaluate.concat(neighboors);
-		}
+		this.livings.forEach(function(current) {
+			locationsToEvaluate.append(current);
+			locationsToEvaluate.appendLocations(this.world.neighboors(current));
+		}, this);
 
-		for(let i=0 ; i<locationsToEvaluate.length ; i++) {
-			let current = locationsToEvaluate[i];
-			let neighboors = this.world.convertLocations(current.neighboors);
-			let livingNeighbors = neighboors.filter(function(location) {
-				return this.isCellAlive(location);
-			}, this);
-			if(livingNeighbors.length === 3) {
-				bornCells.push(current);
+		var newxtGenLivings = [];
+
+		locationsToEvaluate.toArray().forEach(function(current) {
+
+			let isAlive = this.isCellAlive(current);
+			let aliveNeighboors = this.world.neighboors(current).filter(l => this.isCellAlive(l));
+
+			if(!isAlive && aliveNeighboors.length === 3) {
+				newxtGenLivings.push(current);
+			} else if(isAlive && (aliveNeighboors.length === 2 || aliveNeighboors.length === 3)) {
+				newxtGenLivings.push(current);
 			}
-		}
 
-		let survivorCells = [];
-		for(let i=0 ; i<this.livings.length ; i++) {
-			let current = this.livings[i];
-			let neighboors = this.world.convertLocations(current.neighboors);
-			let livingNeighbors = neighboors.filter(function(location) {
-				return this.isCellAlive(location);
-			}, this);
-			if(livingNeighbors.length === 2 || livingNeighbors.length === 3) {
-				survivorCells.push(current);
-			}
-		}
+		}, this);
 
 		return new GameOfLife({
 			rows: this.world.rows,
 			cols: this.world.cols,
-			locationsWithLivingCell: bornCells.concat(survivorCells)
+			locationsWithLivingCell: newxtGenLivings
 		});
 	}
 
 	get numberLivings() {
 		return this.livings.length;
 	}
-
 }
 
 class World {
@@ -106,7 +74,13 @@ class World {
 
 	convertLocations(locations) {
 		return locations.map( l => this.convertLocation(l) );
-	}	
+	}
+
+	neighboors(location) {
+		let converted = this.convertLocation(location);
+		return this.convertLocations(converted.neighboors);
+	}
+
 }
 
 class Location {
@@ -144,6 +118,38 @@ class Location {
 	}
 }
 
+class LocationSet {
+
+	constructor(locations) {
+		this.set = [];
+		if(locations) {
+			for(var i=0 ; i<locations.length ; i++) {
+				this.append(locations[i]);
+			}
+		}
+	}
+
+	contains(location) {
+		return this.set.filter(l => l.equals(location)).length > 0;
+	}
+
+	append(location) {
+		if(!this.contains(location)) {
+			this.set.push(location);
+		}
+	}
+
+	appendLocations(locations) {
+		locations.forEach(function(current) {
+			this.append(current);
+		}, this);
+	}
+
+	toArray() {
+		return this.set;
+	}
+
+}
 
 module.exports = {
 	GameOfLife: GameOfLife,

@@ -19,6 +19,17 @@ class GameOfLifeComponent {
 
 		this.period = conf.period;
 		this._updateGrid();
+
+		$('#' + conf.containerId).on('gridClick', function(e, obj) {
+			var location = new Location(obj.coords.x, obj.coords.y);
+			this._toggleLivingCell(location);
+
+		}.bind(this)); 
+	}
+
+	_toggleLivingCell(location) {
+		this.game = this.game.toggleLiving(location);
+		this._updateGrid();
 	}
 
 	play() {
@@ -70,11 +81,20 @@ class Grid {
 			.attr({width: this.width, height: this.height})
 			.appendTo('#' + this.containerId);
 
+
 		this.canvas = $canvas.get(0);
 		this.canvasCtx = this.canvas.getContext("2d");
 
 		this.clean();
 
+		$canvas.click((function(e) {
+			var x = e.pageX - this.canvas.offsetLeft;
+			var y = e.pageY - this.canvas.offsetTop;
+			var cellY = Math.floor(x / this.cellWidth);
+			var cellX = Math.floor(y / this.cellHeight);
+			var coords = {x: cellX, y: cellY};
+			$('#' + this.containerId).trigger('gridClick', [{coords: coords}]);
+		}).bind(this));
 	}
 
 	changeCellColor(x, y, color) {
@@ -136,6 +156,20 @@ class GameOfLife {
 			rows: this.world.rows,
 			cols: this.world.cols,
 			locationsWithLivingCell: nextGenLivings
+		});
+	}
+
+	toggleLiving(location) {
+		var set = new LocationSet(this.livings);
+		if(set.contains(location)) {
+			set.delete(location);
+		} else {
+			set.append(location);
+		}
+		return new GameOfLife({
+			rows: this.world.rows,
+			cols: this.world.cols,
+			locationsWithLivingCell: set.toArray()
 		});
 	}
 
@@ -231,6 +265,17 @@ class LocationSet {
 	append(location) {
 		if(!this.contains(location)) {
 			this.set.push(location);
+		}
+	}
+
+	delete(location) {
+		if(this.contains(location)) {
+			var index = this.set.findIndex(function(current) {
+				return current.equals(location);
+			});
+			if(index>-1) {
+				this.set.remove(index);
+			}
 		}
 	}
 

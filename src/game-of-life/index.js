@@ -8,8 +8,10 @@ class GameOfLifeComponent {
 			locationsWithLivingCell: conf.livings
 		});
 
+		var $golContainer = $('<div>', {class: 'gol-container'}).appendTo('#' + conf.containerId);
+
 		this.grid = new Grid({
-			containerId: conf.containerId,
+			$container: $golContainer,
 			width: conf.width,
 			height: conf.height,
 			rows: conf.rows,
@@ -21,31 +23,27 @@ class GameOfLifeComponent {
 		this.period = conf.period;
 		this._updateGrid();
 
-		var containerSelector = '#' + conf.containerId;
-
-		$(containerSelector).on('gridClick', function(e, obj) {
+		$golContainer.on('gridClick', function(e, obj) {
 			var location = new Location(obj.coords.x, obj.coords.y);
 			this._toggleCellLife(location);
 
 		}.bind(this));
 
-
-		var $playButton = $('<button>',
-			{
-				text: 'play',
-				click: function(e) {
-					this.play();
-				}.bind(this)
-			}).appendTo(containerSelector);
-
-		var $pauseButton = $('<button>',
-			{
-				text: 'pause',
-				click: function(e) {
-					this.pause();
-				}.bind(this)
-			}).appendTo(containerSelector);
-
+		$golContainer.append($('<div>', {class: 'gol-buttons'})
+			.append($('<button>',
+				{
+					text: 'play',
+					click: function(e) {
+						this.play();
+					}.bind(this)
+				}))
+			.append($('<button>',
+				{
+					text: 'pause',
+					click: function(e) {
+						this.pause();
+					}.bind(this)
+				})));
 	}
 
 	_toggleCellLife(location) {
@@ -85,7 +83,7 @@ class Grid {
 
 	constructor(conf) {
 		
-		this.containerId = conf.containerId;
+		this.$container = conf.$container;
 		this.width = conf.width;
 		this.height = conf.height;
 		this.rows = conf.rows;
@@ -96,9 +94,7 @@ class Grid {
 		this.cellHeight = this.height/this.rows;
 
 		var $canvas = $('<canvas/>')
-			.attr({width: this.width, height: this.height})
-			.appendTo('#' + this.containerId);
-
+			.attr({width: this.width, height: this.height});
 
 		this.canvas = $canvas.get(0);
 		this.canvasCtx = this.canvas.getContext("2d");
@@ -111,8 +107,10 @@ class Grid {
 			var cellY = Math.floor(x / this.cellWidth);
 			var cellX = Math.floor(y / this.cellHeight);
 			var coords = {x: cellX, y: cellY};
-			$('#' + this.containerId).trigger('gridClick', [{coords: coords}]);
+			this.$container.trigger('gridClick', [{coords: coords}]);
 		}).bind(this));
+
+		this.$container.append($canvas);
 	}
 
 	changeCellColor(x, y, color) {

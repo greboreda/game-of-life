@@ -1,5 +1,4 @@
 var golComponent;
-var golComponent2;
 
 $(document).ready(function() {
 
@@ -12,30 +11,22 @@ $(document).ready(function() {
 		period: 75,
 		cellColor: 'white',
 		backgroundColor: 'black',
-		livings: getAcorn()
+		livings: getAcorn({x: 37, y:37})
 	};
-
-
 
 	golComponent = new gol.GameOfLifeComponent(conf);
 
-	/*
-	conf.containerId = 'game-of-life-2';
-	golComponent2 = new gol.GameOfLifeComponent(conf);
-	*/
-
 });
 
-let loc = (x,y) => new gol.Location(x,y);
+function getAcorn(origin) {
+	let xi = origin.x;
+	let yi = origin.y;
 
-function getAcorn() {
-	return [
-			loc(0,1),
-			loc(1,3),
-			loc(2,0),
-			loc(2,1),
-			loc(2,4),
-			loc(2,5),
-			loc(2,6),
-		];
+	let pattern = [ [0,1], [1,3], [2,0], [2,1], [2,4], [2,5], [2,6]];
+
+	return pattern.map(function(c) {
+		let x = c[0];
+		let y = c[1];
+		return new gol.Location(xi+x, yi+y);
+	});
 }

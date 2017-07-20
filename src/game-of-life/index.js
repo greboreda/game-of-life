@@ -24,7 +24,7 @@ class GameOfLifeComponent {
 
 		$(containerSelector).on('gridClick', function(e, obj) {
 			var location = new Location(obj.coords.x, obj.coords.y);
-			this._toggleLivingCell(location);
+			this._toggleCellLife(location);
 
 		}.bind(this));
 
@@ -47,7 +47,7 @@ class GameOfLifeComponent {
 
 	}
 
-	_toggleLivingCell(location) {
+	_toggleCellLife(location) {
 		this.game = this.game.toggleLiving(location);
 		this._updateGrid();
 	}
@@ -271,15 +271,11 @@ class LocationSet {
 
 	constructor(locations) {
 		this.set = [];
-		if(locations) {
-			for(var i=0 ; i<locations.length ; i++) {
-				this.append(locations[i]);
-			}
-		}
+		this.appendLocations(locations);
 	}
 
 	contains(location) {
-		return this.set.filter(l => l.equals(location)).length > 0;
+		return this.set.find(l => l.equals(location)) !== undefined;
 	}
 
 	append(location) {
@@ -289,20 +285,16 @@ class LocationSet {
 	}
 
 	delete(location) {
-		if(this.contains(location)) {
-			var index = this.set.findIndex(function(current) {
-				return current.equals(location);
-			});
-			if(index>-1) {
-				this.set.splice(index, 1);
-			}
+		var index = this.set.findIndex(current => current.equals(location));
+		if(index>-1) {
+			this.set.splice(index, 1);
 		}
 	}
 
 	appendLocations(locations) {
-		locations.forEach(function(current) {
-			this.append(current);
-		}, this);
+		if(locations) {
+			locations.forEach(l => this.append(l));
+		}
 	}
 
 	toArray() {

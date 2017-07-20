@@ -14,9 +14,10 @@ class GameOfLifeComponent {
 			height: conf.height,
 			rows: conf.rows,
 			cols: conf.cols,
-			backgroundColor: 'black'
+			backgroundColor: conf.backgroundColor
 		});
 
+		this.cellColor = conf.cellColor;
 		this.period = conf.period;
 		this._updateGrid();
 
@@ -75,10 +76,7 @@ class GameOfLifeComponent {
 
 	_updateGrid() {
 		this.grid.clean();
-		for(var i=0 ; i<this.game.livings.length ; i++) {
-			var location = this.game.livings[i];
-			this.grid.changeCellColor(location.x, location.y, 'white');
-		}		
+		this.game.livings.forEach(l => this.grid.changeCellColor(l.x, l.y, this.cellColor));
 	}
 
 }
@@ -129,7 +127,6 @@ class Grid {
 		this.canvasCtx.fillStyle = this.backgroundColor;
 		this.canvasCtx.fillRect(0, 0, this.width, this.height);		
 	}
-
 }
 
 
@@ -138,28 +135,30 @@ class GameOfLife {
 
 	constructor(config) {
 		this.world = new World(config.rows, config.cols);
-		this.livings = new LocationSet(config.locationsWithLivingCell).toArray();
+		this.livings = Location.distincts(config.locationsWithLivingCell);
 		if(this.livings.find(l => !this.world.containsLocation(l))) {
 			throw new Error('Invalid configuration: many cells have invalid locations');
 		}
 	}
 
 	isCellAlive(location) {
-		return this.livings.filter(l => l.equals(location)).length > 0;
+		return this.livings.find(l => l.equals(location)) !== undefined;
 	}
 
 	iterate() {
 
-		var locationsToEvaluate = new LocationSet();
+		var locationsToEvaluate = [];
 
 		this.livings.forEach(function(current) {
-			locationsToEvaluate.append(current);
-			locationsToEvaluate.appendLocations(this.world.neighboors(current));
+			locationsToEvaluate.push(current);
+			locationsToEvaluate = locationsToEvaluate.concat(this.world.neighboors(current));
 		}, this);
+
+		locationsToEvaluate = Location.distincts(locationsToEvaluate);
 
 		var nextGenLivings = [];
 
-		locationsToEvaluate.toArray().forEach(function(current) {
+		locationsToEvaluate.forEach(function(current) {
 
 			let isAlive = this.isCellAlive(current);
 			let aliveNeighboors = this.world.neighboors(current).filter(l => this.isCellAlive(l));
@@ -180,16 +179,18 @@ class GameOfLife {
 	}
 
 	toggleLiving(location) {
-		var set = new LocationSet(this.livings);
-		if(set.contains(location)) {
-			set.delete(location);
+
+		let cellIndex = this.livings.findIndex(l=>l.equals(location));
+		if(cellIndex !== -1) {
+			this.livings.splice(cellIndex, 1);
 		} else {
-			set.append(location);
+			this.livings.push(location);
 		}
+
 		return new GameOfLife({
 			rows: this.world.rows,
 			cols: this.world.cols,
-			locationsWithLivingCell: set.toArray()
+			locationsWithLivingCell: this.livings
 		});
 	}
 
@@ -243,6 +244,23 @@ class Location {
 		return this.x === another.x && this.y === another.y;
 	}
 
+	serialize() {
+		return this.x + ',' + this.y;
+	}
+
+	static deserialize(locationString) {
+		let parts = locationString.split(',');
+		let x = Number(parts[0]);
+		let y = Number(parts[1]);
+		return new Location(x, y);
+	}
+
+
+	static distincts(locations) {
+		let set = new Set( locations.map(l => l.serialize()) );
+		return Array.from(set, e => Location.deserialize(e) );
+	}
+
 	get neighboors() {
 		let factors = [
 			{dx: 1, dy: 1},
@@ -265,42 +283,6 @@ class Location {
 	toString() {
 		return '{ x: ' + this.x + ', y: ' + this.y + ' }';
 	}
-}
-
-class LocationSet {
-
-	constructor(locations) {
-		this.set = [];
-		this.appendLocations(locations);
-	}
-
-	contains(location) {
-		return this.set.find(l => l.equals(location)) !== undefined;
-	}
-
-	append(location) {
-		if(!this.contains(location)) {
-			this.set.push(location);
-		}
-	}
-
-	delete(location) {
-		var index = this.set.findIndex(current => current.equals(location));
-		if(index>-1) {
-			this.set.splice(index, 1);
-		}
-	}
-
-	appendLocations(locations) {
-		if(locations) {
-			locations.forEach(l => this.append(l));
-		}
-	}
-
-	toArray() {
-		return this.set;
-	}
-
 }
 
 module.exports = {

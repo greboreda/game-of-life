@@ -10,6 +10,8 @@ $(document).ready(function() {
 		rows: 80,
 		cols: 80,
 		period: 100,
+		cellColor: 'white',
+		backgroundColor: 'black',
 		livings: [
 			new gol.Location(0,1),
 			new gol.Location(1,2),
@@ -19,15 +21,13 @@ $(document).ready(function() {
 		]
 	};
 
+
+
 	golComponent = new gol.GameOfLifeComponent(conf);
-	golComponent.play()
 
 	/*
 	conf.containerId = 'game-of-life-2';
 	golComponent2 = new gol.GameOfLifeComponent(conf);
-	golComponent2.play();
 	*/
 
-
 });
-

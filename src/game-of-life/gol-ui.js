@@ -9,16 +9,10 @@ $(document).ready(function() {
 		height: 600,
 		rows: 80,
 		cols: 80,
-		period: 100,
+		period: 75,
 		cellColor: 'white',
 		backgroundColor: 'black',
-		livings: [
-			new gol.Location(0,1),
-			new gol.Location(1,2),
-			new gol.Location(2,0),
-			new gol.Location(2,1),
-			new gol.Location(2,2)
-		]
+		livings: getAcorn()
 	};
 
 
@@ -31,3 +25,17 @@ $(document).ready(function() {
 	*/
 
 });
+
+let loc = (x,y) => new gol.Location(x,y);
+
+function getAcorn() {
+	return [
+			loc(0,1),
+			loc(1,3),
+			loc(2,0),
+			loc(2,1),
+			loc(2,4),
+			loc(2,5),
+			loc(2,6),
+		];
+}
